@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+
+<body>
+
+<div>
+  <button onclick="login()">Login</button>
+  <button onclick="logout()">Logout</button>
+  <button onclick="UserInfo()">User Info</button>
+</div>
+
+<script>
+  function UserInfo() {
+    fetch('https://localhost:8080/user/info', {
+      credentials: 'include',
+    })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('User not authenticated');
+              }
+              return response.json();
+            })
+            .then(data => {
+              document.getElementById('status').innerHTML = `
+                        <p>Logged in <strong>${data.username}</strong></p>
+                        <pre>User ID: ${data.userId}</pre>
+                    `;
+            });
+  }
+
+  function login() {
+    window.location.href = 'https://localhost:8080/auth/login';
+  }
+
+  function logout() {
+    document.cookie = 'access_token=; path=/; max-age=0';
+    document.getElementById('status').innerHTML = '<p>Logged out. Click "User Info" to check again.</p>';
+  }
+</script>
+</body>
+</html>
